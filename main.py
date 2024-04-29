@@ -89,7 +89,7 @@ def get_config():
     config.read("config/config.ini", encoding="utf-8")
 
     chip_type = config.get("CHIP", "type")
-    read_method = config.get("READ", "method")
+    read_method = config.get("READ_METHOD", "method")
     data_path = config.get("PATH", "data")
     height_data_name = config.get("NAME", "height_data")
     height_pic_name = config.get("NAME", "height_picture")

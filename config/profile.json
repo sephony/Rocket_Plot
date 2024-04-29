@@ -1,0 +1,16 @@
+{
+  "CHIP": {
+    "type": "STM"
+  },
+  "PATH": {
+    "data": "data\\",
+    "local_data": "data\\data.txt"
+  },
+  "NAME": {
+    "height_data": "data",
+    "height_picture": "picture"
+  },
+  "URL": {
+    "height_data": "http://192.168.4.1/data/2023_10_05__23_45.txt"
+  }
+}

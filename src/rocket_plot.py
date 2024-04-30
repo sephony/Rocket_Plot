@@ -11,10 +11,10 @@ class Rocket_Height:
         else:
             raise ValueError("Invalid chip type")
 
-    def read_file(self, file_path, split_str=" "):
-        return self.chip.read_file(file_path, split_str)
+    def read_file(self, file_path, **kwargs):
+        return self.chip.read_file(file_path, **kwargs)
 
-    def plot(self, pic_path=None):
+    def plot(self, pic_path):
         return self.chip.plot(pic_path)
 
 
@@ -28,7 +28,7 @@ class Rocket_Height_Base(ABC):
 
     # 从文件中读取并整合数据
     @abstractmethod
-    def read_file(self, file_path, split_str=" "):
+    def read_file(self, file_path, **kwargs):
         pass
 
     # 绘制图表
@@ -55,6 +55,7 @@ class Rocket_Height_Base(ABC):
         # 标记最高点
         max_index = self.filtered_heights.index(max(self.filtered_heights))
         max_value = self.filtered_heights[max_index]
+        self.ax.plot(self.time[max_index], max_value, "ro")
         self.ax.annotate(
             f"Max: ({self.time[max_index]}, {max_value:.2f})",
             xy=(self.time[max_index], max_value),
@@ -65,6 +66,7 @@ class Rocket_Height_Base(ABC):
             bbox=dict(boxstyle="round,pad=0.5", fc="yellow", alpha=0.5),
         )
         # 标记起始点
+        self.ax.plot(self.time[0], self.filtered_heights[0], "ro")
         self.ax.annotate(
             f"Start: ({self.time[0]}, {self.filtered_heights[0]:.2f})",
             xy=(self.time[0], self.filtered_heights[0]),
@@ -114,7 +116,13 @@ class Rocket_Height_Base(ABC):
 class Rocket_Height_STM(Rocket_Height_Base):
 
     # 从文件中读取并整合数据
-    def read_file(self, file_path, split_str=" "):
+    def read_file(
+        self,
+        file_path,
+        start_identifier="1000 1000",
+        end_identifier="1001 1001",
+        split_str=" ",
+    ):
         # 读取数据,1000到1001之间的数据
         with open(file_path, "r") as f:
             lines = f.readlines()
@@ -123,10 +131,10 @@ class Rocket_Height_STM(Rocket_Height_Base):
 
         for line in lines:
             line = line.strip()  # 去除行首行尾的空白字符
-            if line == "1000 1000":
+            if line == start_identifier:
                 data_started = True
                 print("数据读取中...", flush=True)
-            elif line == "1001 1001" and data_started:
+            elif line == end_identifier and data_started:
                 print("数据读取完成.\n")
                 break
             elif data_started:

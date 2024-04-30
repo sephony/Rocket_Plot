@@ -9,6 +9,7 @@
 conda create -n rocket python=3.11
 conda activate rocket
 conda install matplotlib numpy pyserial requests
+python -m pip install matlabengine==23.2.1
 ```
 
 ## 使用

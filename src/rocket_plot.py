@@ -105,7 +105,7 @@ class Rocket_Height_Base(ABC):
                 self.text.set_text(
                     f"Time: {x:.2f}\nOriginal Height: {y_original:.2f}\nFiltered Height: {y_filtered:.2f}"
                 )
-                self.text.set_position((x, y_filtered + 2))
+                self.text.set_position((x, y_filtered - 2))
                 self.fig.canvas.draw_idle()
 
     def on_leave(self, event):

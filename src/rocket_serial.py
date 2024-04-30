@@ -5,22 +5,16 @@ import os
 
 
 class SerialData:
-    default_port = "COM3"
-
     def __init__(
         self,
-        port=default_port,
-        exclude_port=default_port,
-        baud_rate=115200,
-        read_time=10,
-        file_path="data.txt",
+        exclude_port="COM3",
     ):
-        self.port = port
         self.exclude_port = exclude_port
-        self.baud_rate = baud_rate
-        self.read_time = read_time
-        self.file_path = file_path
         self.serial = None
+
+    # 获得serial对象的端口和波特率
+    def getImformation(self):
+        return self.serial.port, self.serial.baudrate
 
     # 获取所有可用的串口
     def getAvailablePorts(self, ifPrint=True):
@@ -47,45 +41,48 @@ class SerialData:
         if not port:
             raise RuntimeError("No available ports!")
 
-        self.port = port
-        self.baud_rate = baud_rate
-
         # 创建一个串口对象
         if self.serial is None:
             self.serial = serial.Serial(port, baud_rate, timeout=5)
+            print("Connecting to", port)
+        else:
+            print("Reconnecting to", port)
 
-        print("Connecting to", port)
+        # 关闭串口
+        self.serial.close()
+
         return self.serial
 
     # 读取串口数据
-    def readData(self, read_time=10, save_path="data.txt", save_to_file=True):
-        self.read_time = read_time
-        self.file_path = save_path
+    def read_data(self, read_time=10, save_path="data.txt", save_to_file=True):
 
+        # 打开串口
+        self.serial.open()
         start_time = time.time()
-        if save_to_file:
-            with open(save_path, "a") as f:
-                while True:
-                    # 读取串口数据
-                    data = self.serial.readline()
-                    if data:
-                        # print(data.decode("utf-8"), end="")
-                        f.write(data.decode("utf-8").rstrip("\n"))
-                        f.flush()
-                        os.fsync(f.fileno())
-                    if time.time() - start_time > read_time:
-                        break
-        else:
+
+        with open(save_path, "a") as f:
             while True:
                 # 读取串口数据
                 data = self.serial.readline()
                 if data:
-                    print(data.decode("utf-8"), end="")
+                    if save_to_file:
+                        f.write(data.decode("utf-8").rstrip("\n"))
+                        f.flush()
+                        os.fsync(f.fileno())
+                    else:
+                        print(data.decode("utf-8"), end="")
+                # 如果时间超过了规定的时间，结束读取
                 if time.time() - start_time > read_time:
                     break
 
+        # 关闭串口
+        self.serial.close()
+
     # 向串口发送数据
-    def sendData(self, data, ifkeyboard=False):
+    def send_data(self, data, ifkeyboard=False):
+        # 打开串口
+        self.serial.open()
+
         if ifkeyboard:
             print("Press Ctrl+C to exit")
             try:
@@ -96,17 +93,15 @@ class SerialData:
                 print("Exit")
         else:
             self.serial.write(data.encode())
+        # 关闭串口
+        self.serial.close()
 
     # 向串口发送文件
-    def sendFile(port, filename):
+    def sendFile(self, filename):
         # 打开串口
-        with serial.Serial(port, 9600, timeout=1) as ser:
-            # 打开文件
-            with open(filename, "rb") as f:
-                while True:
-                    # 读取文件内容
-                    data = f.read(1024)
-                    if not data:
-                        break
-                    # 将内容写入串口
-                    ser.write(data)
+        self.serial.open()
+        with open(filename, "r") as f:
+            for line in f:
+                self.serial.write(line.encode())
+        # 关闭串口
+        self.serial.close()

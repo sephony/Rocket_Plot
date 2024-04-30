@@ -1,6 +1,7 @@
 # 自定义
 data/
 test/
+scripts/
 *.exe
 
 # Byte-compiled / optimized / DLL files

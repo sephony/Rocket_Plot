@@ -1,13 +1,11 @@
 import os
 import time
 import configparser
+import shutil
 
 from src.rocket_serial import SerialData
 from src.rocket_html import HtmlData
 from src.rocket_plot import Rocket_Height
-
-# from src.rocket_plot import Rocket_Height_ESP
-# from src.rocket_plot import Rocket_Height_STM
 
 
 def main():
@@ -36,7 +34,6 @@ def main():
             data_folder, height_data_path, height_pic_path = get_this_save_paths(
                 data_path, height_data_name, height_pic_name
             )
-            file_url = height_data_url
 
             # 创建存放这次数据的文件夹
             if not os.path.exists(data_folder):
@@ -45,12 +42,12 @@ def main():
             print("正在生成 data.txt...", flush=True)
             if read_method == "html":
                 rocket = HtmlData()
-                rocket.download_file(url=file_url, save_path=height_data_path)
+                rocket.download_file(url=height_data_url, save_path=height_data_path)
 
             elif read_method == "serial":
                 rocket = SerialData()
                 rocket.connect()
-                rocket.readData(read_time=10, save_path=height_data_path)
+                rocket.read_data(read_time=10, save_path=height_data_path)
 
             else:
                 print("Error: Wrong read method, Please reconfigure.", flush=True)
@@ -68,6 +65,8 @@ def main():
             # 创建存放这次数据的文件夹
             if not os.path.exists(data_folder):
                 os.makedirs(data_folder)
+            # 将本地数据复制到文件夹
+            shutil.copy(local_data_path, height_data_path)
 
             print("正在读取本地文件...\n", flush=True)
             height = Rocket_Height(chip_type)

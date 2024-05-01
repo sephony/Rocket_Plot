@@ -1,24 +1,84 @@
-# 专为火箭飞行高度数据可视化设计的脚本程序
+# 脚本程序——火箭飞行高度可视化
 
-## 依赖
+## 功能
 
-如果你已经安装了conda, 可以通过以下命令安装依赖：
-首先新建一个conda环境，然后激活这个环境，最后安装依赖。
-
-```shell
-conda create -n rocket python=3.11
-conda activate rocket
-conda install matplotlib numpy pyserial requests
-python -m pip install matlabengine==23.2.1
-```
+- 兼容 *ESP* 与 *STM* 上的高度数据存储格式
+- *ESP* 通过`html`方式读取数据，*STM* 通过`serial`方式读取数据
+- 支持自动将高度数据及高度图保存到`data`目录下
+- 支持通过修改`config/config.ini`配置改变程序行为
+- 支持本地高度数据直接绘图
+- 支持数据存储位置、文件名字自定义
 
 ## 使用
 
-### 脚本构成
+这里提供了两种方式，可以从[源码](#源码)解释执行，也可以直接下载[二进制文件](#二进制文件)。
+
+### 源码
+
+首先拉取[仓库代码](https://github.com/sephony/Rocket_Plot)
+
+```shell
+git clone https://github.com/sephony/Rocket_Plot.git
+```
+
+#### 环境搭建
+
+##### venv
+
+如果你直接在本地下载了 `python` 包(*version<3.12*)，请执行下面的语句以创建 `venv` 环境
+并安装依赖
+
+```shell
+python -m venv rocket
+rocket\Scripts\activate
+pip install -r requirements.txt
+```
+
+这样便在当前路径下搭建了环境。
+
+##### conda
+
+鉴于 `venv` 创建的虚拟环境是特定于创建它的项目，项目多了之后空间占用较大，我们这里更推荐 `conda` 安装。这样可以使多个项目共用一个虚拟环境。
+
+conda 的安装网上资料很多，可以在***anaconda***、***miniconda***、***miniforge***中选择其中一个进行下载。
+
+安装好 conda 之后，执行下面的语句以创建环境并安装依赖。
+
+```shell
+conda create -n rocket
+conda install python=3.11
+conda install matiplotlib numpy pyserial requests
+```
+
+#### 解释执行
+
+这个方法就更多了，你可以使用 *vscode*、*PyCharm* 调试，也可以在当前文件夹下激活虚拟环境后直接运行即可。
+
+```shell
+python main.py
+```
+
+具体的脚本操作[请看这里](#脚本运行)
+
+### 二进制文件
+
+在[这里](https://github.com/sephony/Rocket_Plot/releases)下载可执行程序 `main.exe` 及配置文件 `config.zip`，解压后放在同一文件夹下
+
+以下是脚本组成
+
+```shell
+|--Rocket_Plot/
+    |--config/
+        |--config.ini
+    |--data/
+    |--main.exe
+```
 
 - `config/`: 存放配置文件
-- `data/`: 存放数据
+- `data/`: 存放数据的默认文件夹，运行程序自动生成
 - `main.exe`：主程序
+
+#### 脚本运行
 
 运行主程序后，会打开一个命令行窗口，按照提示操作即可。可能的界面如下：
 
@@ -84,7 +144,7 @@ height_picture = picture
 height_data = http://192.168.4.1/data/2023_10_05__23_45.txt
 ```
 
-ESP通过串口读取的功能暂未开发，等待后续更改ESP主程序。
+ESP通过串口读取的功能暂未开发，等待后续更改ESP主程序。也就是说，现在 `ESP` 对应 `html` 模式，`STM` 对应 `serial` 模式
 
 ## 数据查看
 
@@ -99,5 +159,3 @@ ESP通过串口读取的功能暂未开发，等待后续更改ESP主程序。
         |--data.txt
         |--picture.png
 ```
-
-<!-- conda install pyinstaller -->

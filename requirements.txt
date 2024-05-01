@@ -1,0 +1,4 @@
+matiplotlib
+numpy
+pyserial
+requests

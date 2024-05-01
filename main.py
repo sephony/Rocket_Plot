@@ -9,6 +9,10 @@ from src.rocket_plot import Rocket_Height
 
 
 def main():
+    # 检测是否存在配置文件，不存在则创建
+    if not os.path.exists("config/config.ini"):
+        create_config()
+
     # 获取配置文件中的参数
     (
         chip_type,
@@ -79,6 +83,28 @@ def main():
             continue
 
         height.plot(height_pic_path)
+
+
+def create_config():
+    # 创建配置文件
+    print("未找到配置文件，正在创建...", flush=True)
+    config = configparser.ConfigParser()
+
+    # 配置文件内容
+    config["CHIP"] = {"type": "STM"}
+    config["READ_METHOD"] = {"method": "serial"}
+    config["PATH"] = {"data": "data/", "local_data": "test/data.txt"}
+    config["NAME"] = {"height_data": "data", "height_picture": "picture"}
+    config["URL"] = {"height_data": "http://192.168.4.1/data/2023_10_05__23_45.txt"}
+
+    # 写入配置文件
+    with open("config/config.ini", "w") as configfile:
+        config.write(configfile)
+
+    print("配置文件创建成功，请修改配置后重新运行程序", flush=True)
+    # 按下任意键退出
+    input("按下任意键退出...")
+    exit(0)
 
 
 def get_config():

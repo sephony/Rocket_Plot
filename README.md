@@ -62,7 +62,7 @@ python main.py
 
 ### 二进制文件
 
-在[这里](https://github.com/sephony/Rocket_Plot/releases)下载可执行程序 `main.exe` 及配置文件 `config.zip`，解压后放在同一文件夹下
+在[这里](https://github.com/sephony/Rocket_Plot/releases)下载可执行程序 `main.exe`
 
 以下是脚本组成
 
@@ -113,7 +113,10 @@ Connecting to COM6
 图像绘制完成
 ```
 
-> Note
+第一次运行时，会默认生成一个配置文件`config/config.ini`，之后根据你的需求配置好后再次运行即可。
+
+> ***Note***
+>
 > 运行`main.exe`前，需要先更改`config/config.ini`中的配置（如果需要）。
 
 ### 配置文件

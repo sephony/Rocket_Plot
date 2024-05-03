@@ -46,8 +46,9 @@ conda 的安装网上资料很多，可以在***anaconda***、***miniconda***、
 
 ```shell
 conda create -n rocket
+conda activate rocket
 conda install python=3.11
-conda install matiplotlib numpy pyserial requests
+conda install matplotlib numpy pyserial requests
 ```
 
 #### 解释执行

@@ -88,6 +88,7 @@ def main():
 def create_config():
     # 创建配置文件
     print("未找到配置文件，正在创建...", flush=True)
+    os.makedirs("config")
     config = configparser.ConfigParser()
 
     # 配置文件内容
